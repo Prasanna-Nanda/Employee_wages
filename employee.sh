@@ -1,71 +1,88 @@
 #!/bin/bash
 
+echo "Welcome to Employee Wage Computation"
 
-echo " Welcome to employe wage computation"
-presentforparttime=1
-present for full to=ime=2
+presentForPartTime=1
+presentForFullTime=2
 absent=0
-wageperhour=20
-fulltimehour=8
-parttimehour=4
+wagePerHour=20
+fullTimeHour=8
+partTimeHour=4
+empWorkingDays=0
+empWorkingHours=0
+maxWorkingDays=20
+maxWorkingHours=100
 
-
-
-function empworkinghours()
+function dailyEmpWage()
 {
-case $attendence in
-1)empworkinghour=4
-;;
-2)empworkhour=8
-;;
-*)empworkhour=0
-;;
-esac
-echo $empworkhour
-
+empWorkHours=$1
+dailyEmpWage=$(( $empWorkHours * $wagePerHour ))
+echo $dailyEmpWage
 }
 
-function totalwage()
+function empWorkingHours()
 {
-empwage=$1
-totalempwage=$(( $empwage * $wageperhour ))
-echo $totalempwage
+case $attendance in
 
+1)empWorkHour=4 ;;
+2)empWorkHour=8 ;;
+*)empWorkHour=0
 
-while(( $empworkingdays < $maxworkingdays && $empworkinghours < $maxworkinghours ))
+esac
+echo $empWorkHour
+}
+
+function totalWage()
+{
+empWage=$1
+totalEmpWage=$(( $empWage * $wagePerHour ))
+echo $totalEmpWage
+}
+
+while (( $empWorkingDays < $maxWorkingDays && $empWorkingHours < $maxWorkingHours ))
 do
-(( empworkingdays++ ))
-(( empworkinghours++ ))
+((empWorkingDays++))
+((empworkingHours++))
 
-attendence=$((RANDOM%3))
-if (( $attendence == $presentforparttime ))
+attendance=$((RANDOM%3))
+if (( $attendance == $presentForPartTime ))
 then
-((fullwork++))
-elif(( $attendence == $presentforfulltime ))
+((fullWork++))
+
+elif (( $attendance == $presentForFullTime ))
 then
- ((halfwork++))
+((halfWork++))
 else
 ((absent++))
 fi
 
 
+empWorkingHours="$( empWorkingHours $attendance )"
+totalEmpHours=$(( $totalEmpHours + $empWorkingHours ))
+empDailyWage[$empWorkingDays]="$( dailyEmpWage $empWorkingHours )"
+empTotalWage[$empWorkingDays]="$( totalWage $totalEmpHours )"
+day[$count]=$count
 
-if[[$count == 20]]
+if [[ $count == 20 ]]
 then
 break
 fi
 ((i++))
-totalwage=$(( $wageperhour * $totalemphours))
-totalday=$(( $fullwork * $halfwork * $absent ))
+
+done
+
+totalWage=$(( $wagePerHour * $totalEmpHours ))
+totalDay=$(( $fullWork + $halfWork + $absent ))
 i=1
-echo "Days Dailywage totalwage"
-while (( $empworking <= totalday ))
+echo "Days    DailyWage   TotalWage"
+while (( $empWorkingDays <= $totalDay ))
 do
-echo "day [$i] ${empdailywage[$i]} ${emptotalwage[$i]}"
-if[[ $i == 20 ]]
+
+echo "day[$i]	${empDailyWage[$i]}	${empTotalWage[$i]}"
+
+if [[ $i == 20 ]]
 then
 exit 0
 fi
-
 ((i++))
 done
