@@ -47,3 +47,25 @@ then
 else
 ((absent++))
 fi
+
+
+
+if[[$count == 20]]
+then
+break
+fi
+((i++))
+totalwage=$(( $wageperhour * $totalemphours))
+totalday=$(( $fullwork * $halfwork * $absent ))
+i=1
+echo "Days Dailywage totalwage"
+while (( $empworking <= totalday ))
+do
+echo "day [$i] ${empdailywage[$i]} ${emptotalwage[$i]}"
+if[[ $i == 20 ]]
+then
+exit 0
+fi
+
+((i++))
+done
